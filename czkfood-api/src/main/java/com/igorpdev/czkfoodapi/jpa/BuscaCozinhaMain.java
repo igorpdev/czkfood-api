@@ -2,6 +2,7 @@ package com.igorpdev.czkfoodapi.jpa;
 
 import com.igorpdev.czkfoodapi.CzkfoodApiApplication;
 import com.igorpdev.czkfoodapi.domain.model.Cozinha;
+import com.igorpdev.czkfoodapi.domain.repository.CozinhaRepository;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -14,9 +15,9 @@ public class BuscaCozinhaMain {
             .web(WebApplicationType.NONE)
             .run(args);
 
-        CadastroCozinha cadastroCozinha = applicationContext.getBean(CadastroCozinha.class);
+        CozinhaRepository cozinhaRepository = applicationContext.getBean(CozinhaRepository.class);
 
-        Cozinha cozinha = cadastroCozinha.buscar(1L);
+        Cozinha cozinha = cozinhaRepository.buscar(1L);
 
         System.out.println(cozinha.getNome());
     }

@@ -25,8 +25,14 @@ public class CadastroCozinha {
         return manager.find(Cozinha.class, id);
     }
 
-    @Transactional
+    @Transactional //para ser executado dentro de uma transação
     public Cozinha salvar(Cozinha cozinha) {
         return manager.merge(cozinha);
+    }
+
+    @Transactional
+    public void remover(Cozinha cozinha) {
+        cozinha = buscar(cozinha.getId()); //é necessário fazer um find antes de remover para que a
+        manager.remove(cozinha);          //cozinha passe do estado Transient para Managed
     }
 }

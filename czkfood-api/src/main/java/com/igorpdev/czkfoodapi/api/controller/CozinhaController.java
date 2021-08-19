@@ -29,7 +29,13 @@ public class CozinhaController {
         Cozinha cozinha = cozinhaRepository.buscar(cozinhaId);
 
         //return ResponseEntity.status(HttpStatus.OK).body(cozinha); //.build() no lugar do body retorna somente o status
-        return ResponseEntity.ok(cozinha);
+        //return ResponseEntity.ok(cozinha);
+
+        if(cozinha != null) {
+            return ResponseEntity.ok(cozinha);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 
 }

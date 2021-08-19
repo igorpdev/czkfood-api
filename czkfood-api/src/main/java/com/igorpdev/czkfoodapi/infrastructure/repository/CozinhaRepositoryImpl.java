@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.repository.CozinhaRepository;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +35,20 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
         return manager.merge(cozinha);
     }
 
+    /* É necessário fazer um find antes de remover para que a cozinha passe do estado Transient para Managed.
+            Não há problema colocar o if para verificar se a Cozinha existe no Repository invés do
+                Service, pois ela está diretamente ligada à Persistência no banco de dados */
+
     @Override
     @Transactional
-    public void remover(Cozinha cozinha) {
-        cozinha = buscar(cozinha.getId()); //é necessário fazer um find antes de remover para que a
-        manager.remove(cozinha);          //cozinha passe do estado Transient para Managed
+    public void remover(Long id) {
+        Cozinha cozinha = buscar(id); 
+
+        if(cozinha == null) {
+            throw new EmptyResultDataAccessException(1);
+        }
+
+        manager.remove(cozinha);          
     }
 
 }

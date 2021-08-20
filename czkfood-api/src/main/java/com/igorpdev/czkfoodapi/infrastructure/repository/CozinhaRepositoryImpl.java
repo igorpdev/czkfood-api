@@ -9,10 +9,10 @@ import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.repository.CozinhaRepository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Repository
 public class CozinhaRepositoryImpl implements CozinhaRepository {
     
     @PersistenceContext
@@ -22,6 +22,12 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
     public List<Cozinha> listar() {
         return manager.createQuery("from Cozinha", Cozinha.class)
             .getResultList();
+    }
+
+    @Override
+    public List<Cozinha> consultarPorNome(String nome) {
+        return manager.createQuery("from Cozinha where nome like :nome", Cozinha.class)
+            .setParameter("nome", "%" + nome + "%").getResultList();
     }
 
     @Override
@@ -38,7 +44,6 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
     /* É necessário fazer um find antes de remover para que a cozinha passe do estado Transient para Managed.
             Não há problema colocar o if para verificar se a Cozinha existe no Repository invés do
                 Service, pois ela está diretamente ligada à Persistência no banco de dados */
-
     @Override
     @Transactional
     public void remover(Long id) {

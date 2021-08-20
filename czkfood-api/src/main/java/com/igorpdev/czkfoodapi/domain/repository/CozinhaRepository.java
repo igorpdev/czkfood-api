@@ -4,12 +4,10 @@ import java.util.List;
 
 import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 
-public interface CozinhaRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
     
-    List<Cozinha> listar();
-    List<Cozinha> consultarPorNome(String nome);
-    Cozinha buscar(Long id);
-    Cozinha salvar(Cozinha cozinha);
-    void remover(Long id);
+    //List<Cozinha> consultarPorNome(String nome);
     
 }

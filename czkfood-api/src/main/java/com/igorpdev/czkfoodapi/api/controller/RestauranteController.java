@@ -1,7 +1,10 @@
 package com.igorpdev.czkfoodapi.api.controller;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.igorpdev.czkfoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 import com.igorpdev.czkfoodapi.domain.repository.RestauranteRepository;
@@ -11,7 +14,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -73,5 +78,35 @@ public class RestauranteController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
     }
+
+    /* Map na situação serve para saber qual dado o consumidor da API deseja atualizar, por exemplo
+        se o consumidor desejasse atualizar algum valor para NULL, utilizando o PATCH direto no
+            Objeto, este NULL seria ignorado, pois o PATCH só considera valores "válidos" */
+    @PatchMapping("/{restauranteId}")
+    public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Map<String, Object> campos) {
+        Restaurante restauranteAtual = restauranteRepository.buscar(restauranteId);
+
+        if (restauranteAtual == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        merge(campos, restauranteAtual);
+
+        return atualizar(restauranteId, restauranteAtual);
+    }
+
+    private void merge(Map<String, Object> dadosOrigem, Restaurante restauranteDestino) {
+		ObjectMapper objectMapper = new ObjectMapper(); //responsável por converter os valores inseridos para os aceitos na API. exemplo Int -> BigDecimal
+        Restaurante restauranteOrigem = objectMapper.convertValue(dadosOrigem, Restaurante.class);
+        
+        dadosOrigem.forEach((nomePropriedade, valorPropriedade) -> {
+            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade); // findField retorna a instância de um campo
+            field.setAccessible(true);
+
+            Object novoValor = ReflectionUtils.getField(field, restauranteOrigem); // getField retorna o valor de um campo
+
+            ReflectionUtils.setField(field, restauranteDestino, novoValor);
+		});
+	}
 
 }

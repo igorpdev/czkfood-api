@@ -36,7 +36,7 @@ public class TesteController {
 
     @GetMapping("/cozinhas/exists")
 	public boolean cozinhaExists(String nome) {
-		return cozinhaRepository.ExistsByNome(nome);
+		return cozinhaRepository.existsByNome(nome);
 	}
 
     @GetMapping("/restaurantes/por-taxa-frete")

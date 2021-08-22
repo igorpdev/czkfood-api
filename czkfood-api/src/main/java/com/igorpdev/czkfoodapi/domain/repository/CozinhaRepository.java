@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CozinhaRepository extends JpaRepository<Cozinha, Long> {
     
-    List<Cozinha> findTodasByNome(String nome);
+    List<Cozinha> findTodasByNomeContaining(String nome);
 	
 	Optional<Cozinha> findByNome(String nome);
     

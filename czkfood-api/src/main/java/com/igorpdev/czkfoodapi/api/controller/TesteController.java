@@ -1,8 +1,5 @@
 package com.igorpdev.czkfoodapi.api.controller;
 
-import static com.igorpdev.czkfoodapi.infrastructure.repository.spec.RestauranteSpecs.freteGratis;
-import static com.igorpdev.czkfoodapi.infrastructure.repository.spec.RestauranteSpecs.nomeSemelhante;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -75,8 +72,7 @@ public class TesteController {
 
 	@GetMapping("/restaurantes/frete-gratis")
 	public List<Restaurante> restaurantesFreteGratis(String nome) {
-
-		return restauranteRepository.findAll(freteGratis().and(nomeSemelhante(nome)));
+		return restauranteRepository.findFreteGratis(nome);
 	}
     
 }

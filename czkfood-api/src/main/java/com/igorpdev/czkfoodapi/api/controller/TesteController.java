@@ -8,6 +8,8 @@ import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 import com.igorpdev.czkfoodapi.domain.repository.CozinhaRepository;
 import com.igorpdev.czkfoodapi.domain.repository.RestauranteRepository;
+import com.igorpdev.czkfoodapi.infrastructure.repository.spec.RestauranteFreteGratisSpec;
+import com.igorpdev.czkfoodapi.infrastructure.repository.spec.RestauranteNomeSemelhanteSpec;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,6 +70,14 @@ public class TesteController {
     @GetMapping("/restaurantes/count-por-cozinha")
 	public int restaurantesCountPorCozinha(Long cozinhaId) {
 		return restauranteRepository.countByCozinhaId(cozinhaId);
+	}
+
+	@GetMapping("/restaurantes/frete-gratis")
+	public List<Restaurante> restaurantesFreteGratis(String nome) {
+		var freteGratis = new RestauranteFreteGratisSpec();
+		var nomeSemelhante = new RestauranteNomeSemelhanteSpec(nome);
+
+		return restauranteRepository.findAll(freteGratis.and(nomeSemelhante));
 	}
     
 }

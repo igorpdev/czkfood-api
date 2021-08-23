@@ -1,6 +1,7 @@
 package com.igorpdev.czkfoodapi.infrastructure.repository;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -15,6 +16,7 @@ import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 import com.igorpdev.czkfoodapi.domain.repository.RestauranteRepositoryQueries;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 @Repository
 public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries {
@@ -30,15 +32,21 @@ public List<Restaurante> find(String nome, BigDecimal taxaFreteInicial, BigDecim
     CriteriaQuery<Restaurante> criteria = builder.createQuery(Restaurante.class);
     Root<Restaurante> root = criteria.from(Restaurante.class);
 
-    Predicate nomePredicate = builder.like(root.get("nome"), "%" + nome + "%");
+    var predicates = new ArrayList<Predicate>();
 
-    Predicate taxaInicialPredicate = builder
-            .greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial);
+    if (StringUtils.hasText(nome)) {
+        predicates.add(builder.like(root.get("nome"), "%" + nome + "%"));
+    }
+
+    if (taxaFreteInicial != null) {
+        predicates.add(builder.greaterThanOrEqualTo(root.get("taxaFrete"), taxaFreteInicial));
+    }
     
-    Predicate taxaFinalPredicate = builder
-            .lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal);
+    if (taxaFreteFinal != null) {
+        predicates.add(builder.lessThanOrEqualTo(root.get("taxaFrete"), taxaFreteFinal));
+    }
 
-    criteria.where(nomePredicate, taxaInicialPredicate, taxaFinalPredicate);
+    criteria.where(predicates.toArray(new Predicate[0]));
 
     TypedQuery<Restaurante> query = manager.createQuery(criteria);
     return query.getResultList();

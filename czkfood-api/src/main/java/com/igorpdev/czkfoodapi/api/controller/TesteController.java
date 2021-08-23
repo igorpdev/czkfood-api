@@ -1,5 +1,8 @@
 package com.igorpdev.czkfoodapi.api.controller;
 
+import static com.igorpdev.czkfoodapi.infrastructure.repository.spec.RestauranteSpecs.freteGratis;
+import static com.igorpdev.czkfoodapi.infrastructure.repository.spec.RestauranteSpecs.nomeSemelhante;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -8,8 +11,6 @@ import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 import com.igorpdev.czkfoodapi.domain.repository.CozinhaRepository;
 import com.igorpdev.czkfoodapi.domain.repository.RestauranteRepository;
-import com.igorpdev.czkfoodapi.infrastructure.repository.spec.RestauranteFreteGratisSpec;
-import com.igorpdev.czkfoodapi.infrastructure.repository.spec.RestauranteNomeSemelhanteSpec;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -74,10 +75,8 @@ public class TesteController {
 
 	@GetMapping("/restaurantes/frete-gratis")
 	public List<Restaurante> restaurantesFreteGratis(String nome) {
-		var freteGratis = new RestauranteFreteGratisSpec();
-		var nomeSemelhante = new RestauranteNomeSemelhanteSpec(nome);
 
-		return restauranteRepository.findAll(freteGratis.and(nomeSemelhante));
+		return restauranteRepository.findAll(freteGratis().and(nomeSemelhante(nome)));
 	}
     
 }

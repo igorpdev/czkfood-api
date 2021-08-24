@@ -7,12 +7,15 @@ import java.util.Optional;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-//import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.Query;
 //import org.springframework.data.repository.query.Param;
 
 public interface RestauranteRepository 
         extends CustomJpaRepository<Restaurante, Long>, RestauranteRepositoryQueries, JpaSpecificationExecutor<Restaurante> {
         
+    @Query("FROM Restaurante r JOIN FETCH r.cozinha LEFT JOIN FETCH r.formasPagamento")
+    List<Restaurante> findAll();
+    
     List<Restaurante> queryByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
 
     //@Query("FROM Restaurante WHERE nome LIKE %:nome% AND cozinha.id = :id")

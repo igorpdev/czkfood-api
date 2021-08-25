@@ -1,6 +1,6 @@
 package com.igorpdev.czkfoodapi.domain.service;
 
-import com.igorpdev.czkfoodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.igorpdev.czkfoodapi.domain.exception.RestauranteNaoEncontradoException;
 import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 import com.igorpdev.czkfoodapi.domain.repository.RestauranteRepository;
@@ -11,9 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class CadastroRestauranteService {
     
-    private static final String MSG_RESTAURANTE_NAO_ENCONTRADO =
-         "Não existe restaurante cadastrado com o código %d";
-
     @Autowired
     RestauranteRepository restauranteRepository;
 
@@ -32,8 +29,7 @@ public class CadastroRestauranteService {
 
     public Restaurante buscarOuFalhar(Long restauranteId) {
         return restauranteRepository.findById(restauranteId)
-            .orElseThrow(() -> new EntidadeNaoEncontradaException(
-                    String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, restauranteId)));
+            .orElseThrow(() -> new RestauranteNaoEncontradoException(restauranteId));
     }
 
 }

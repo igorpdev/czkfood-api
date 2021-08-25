@@ -32,7 +32,9 @@ public class CadastroCozinhaService {
             throw new EntidadeNaoEncontradaException(
                 String.format("Não existe um cadastro de cozinha com o código %d", cozinhaId));
 
-            /* throw new ResponseStatusException(HttpStatus.NOT_FOUND, // É interessante para projetos menores onde você não quer criar uma Exception
+                /* É interessante para projetos menores onde você não quer criar uma Exception.
+                    Entretanto, não é uma boa prática deixar o Status HTTP na classe de serviço 
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                 String.format("Não existe um cadastro de cozinha com o código %d", cozinhaId)); */
         }
         catch (DataIntegrityViolationException e) {

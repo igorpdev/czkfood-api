@@ -2,6 +2,7 @@ package com.igorpdev.czkfoodapi.api.exceptionhandler;
 
 import java.time.LocalDateTime;
 
+import com.igorpdev.czkfoodapi.domain.exception.EntidadeEmUsoException;
 import com.igorpdev.czkfoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
 
@@ -21,6 +22,15 @@ public class ApiExceptionHandler {
             .mensagem(e.getMessage()).build();
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
+    }
+
+    @ExceptionHandler(EntidadeEmUsoException.class)
+    public ResponseEntity<?> handleEntidadeEmUsoException(EntidadeEmUsoException e) {
+        Problema problema = Problema.builder()
+            .dataHora(LocalDateTime.now())
+            .mensagem(e.getMessage()).build();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problema);
     }
 
     @ExceptionHandler(NegocioException.class)

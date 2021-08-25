@@ -1,7 +1,10 @@
 package com.igorpdev.czkfoodapi.api.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.igorpdev.czkfoodapi.api.exceptionhandler.Problema;
+import com.igorpdev.czkfoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.EstadoNaoEncontradoException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
 import com.igorpdev.czkfoodapi.domain.model.Cidade;
@@ -11,7 +14,9 @@ import com.igorpdev.czkfoodapi.domain.service.CadastroCidadeService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,6 +73,24 @@ public class CidadeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long cidadeId) {
         cadastroCidade.excluir(cidadeId);
+    }
+
+    @ExceptionHandler(EntidadeNaoEncontradaException.class)
+    public ResponseEntity<?> handleEntidadeNaoEncontradaException(EntidadeNaoEncontradaException e) {
+        Problema problema = Problema.builder()
+            .dataHora(LocalDateTime.now())
+            .mensagem(e.getMessage()).build();
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problema);
+    }
+
+    @ExceptionHandler(NegocioException.class)
+    public ResponseEntity<?> handleNegocioException(NegocioException e) {
+        Problema problema = Problema.builder()
+            .dataHora(LocalDateTime.now())
+            .mensagem(e.getMessage()).build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problema);
     }
     
 }

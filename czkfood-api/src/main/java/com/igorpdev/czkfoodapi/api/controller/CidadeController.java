@@ -2,7 +2,7 @@ package com.igorpdev.czkfoodapi.api.controller;
 
 import java.util.List;
 
-import com.igorpdev.czkfoodapi.domain.exception.EntidadeNaoEncontradaException;
+import com.igorpdev.czkfoodapi.domain.exception.EstadoNaoEncontradoException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
 import com.igorpdev.czkfoodapi.domain.model.Cidade;
 import com.igorpdev.czkfoodapi.domain.repository.CidadeRepository;
@@ -46,21 +46,21 @@ public class CidadeController {
     public Cidade adicionar(@RequestBody Cidade cidade) {
         try {
             return cadastroCidade.salvar(cidade); 
-        } catch (EntidadeNaoEncontradaException e) { // Necessário para disparar o Status BAD REQUEST ao consumidor
-            throw new NegocioException(e.getMessage()); // tentar criar uma cidade com um estado inexistente
+        } catch (EstadoNaoEncontradoException e) { // Necessário para disparar o Status BAD REQUEST ao consumidor
+            throw new NegocioException(e.getMessage(), e); // tentar criar uma cidade com um estado inexistente
         }
     }
 
     @PutMapping("/{cidadeId}")
     public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-		Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
-			
-		BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-
         try {
+            Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
+                
+            BeanUtils.copyProperties(cidade, cidadeAtual, "id");
+
             return cadastroCidade.salvar(cidadeAtual);
-        } catch (EntidadeNaoEncontradaException e) { // Necessário para disparar o Status BAD REQUEST ao consumidor
-            throw new NegocioException(e.getMessage()); // tentar atualizar uma cidade com um estado inexistente
+        } catch (EstadoNaoEncontradoException e) { // Necessário para disparar o Status BAD REQUEST ao consumidor
+            throw new NegocioException(e.getMessage(), e); // tentar atualizar uma cidade com um estado inexistente
         }
     }
 

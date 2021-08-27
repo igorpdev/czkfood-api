@@ -2,6 +2,8 @@ package com.igorpdev.czkfoodapi.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.igorpdev.czkfoodapi.domain.exception.EstadoNaoEncontradoException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
 import com.igorpdev.czkfoodapi.domain.model.Cidade;
@@ -43,7 +45,7 @@ public class CidadeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cidade adicionar(@RequestBody Cidade cidade) {
+    public Cidade adicionar(@RequestBody @Valid Cidade cidade) {
         try {
             return cadastroCidade.salvar(cidade); 
         } catch (EstadoNaoEncontradoException e) { // Necessário para disparar o Status BAD REQUEST ao consumidor
@@ -52,7 +54,7 @@ public class CidadeController {
     }
 
     @PutMapping("/{cidadeId}")
-    public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+    public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody @Valid Cidade cidade) {
         try {
             Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
                 

@@ -2,6 +2,8 @@ package com.igorpdev.czkfoodapi.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.repository.CozinhaRepository;
 import com.igorpdev.czkfoodapi.domain.service.CadastroCozinhaService;
@@ -41,7 +43,7 @@ public class CozinhaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cozinha adicionar(@RequestBody Cozinha cozinha) {
+    public Cozinha adicionar(@RequestBody @Valid Cozinha cozinha) {
         return cadastroCozinha.salvar(cozinha);
     }
 

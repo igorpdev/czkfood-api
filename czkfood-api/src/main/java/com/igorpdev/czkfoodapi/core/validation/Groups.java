@@ -1,4 +1,4 @@
-package com.igorpdev.czkfoodapi;
+package com.igorpdev.czkfoodapi.core.validation;
 
 public interface Groups {
     

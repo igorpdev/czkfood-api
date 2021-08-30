@@ -1,5 +1,7 @@
 package com.igorpdev.czkfoodapi;
 
+import com.igorpdev.czkfoodapi.domain.exception.EntidadeEmUsoException;
+import com.igorpdev.czkfoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.service.CadastroCozinhaService;
 
@@ -47,5 +49,25 @@ class CadastroCozinhaIntegrationTests {
 
 		assertThat(erroEsperado).isNotNull();
 	}
+
+    @Test
+    public void testarExcluirCozinhaEmUso() {
+        EntidadeEmUsoException erroEsperado = 
+            Assertions.assertThrows(EntidadeEmUsoException.class, () -> {
+                cadastroCozinha.excluir(1L);
+            });
+
+        assertThat(erroEsperado).isNotNull();    
+    }
+
+    @Test
+    public void testarExcluirCozinhaInexistente() {
+        EntidadeNaoEncontradaException erroEsperado =
+            Assertions.assertThrows(EntidadeNaoEncontradaException.class, () -> {
+                cadastroCozinha.excluir(20L);
+            });
+
+        assertThat(erroEsperado).isNotNull();    
+    }
 
 }

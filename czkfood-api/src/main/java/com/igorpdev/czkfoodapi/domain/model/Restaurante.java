@@ -25,7 +25,6 @@ import javax.validation.groups.Default;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.igorpdev.czkfoodapi.core.validation.Groups;
-import com.igorpdev.czkfoodapi.core.validation.Multiplo;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -51,7 +50,6 @@ public class Restaurante {
 
     @NotNull
     @PositiveOrZero
-    @Multiplo(numero = 5)
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
 

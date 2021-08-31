@@ -4,7 +4,10 @@ import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.repository.CozinhaRepository;
 import com.igorpdev.czkfoodapi.util.DatabaseCleaner;
 
-import org.hamcrest.Matchers;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.equalTo;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,7 +47,7 @@ class CadastroCozinhaIT {
     
     @Test
     public void deveRetornarStatus200_QuandoConsultarCozinhas() {        
-        RestAssured.given()
+        given()
             .accept(ContentType.JSON)
         .when()
             .get()
@@ -54,18 +57,17 @@ class CadastroCozinhaIT {
 
     @Test
     public void deveConter2Cozinhas_QuandoConsultarCozinhas() {
-        RestAssured.given()
+        given()
             .accept(ContentType.JSON)
         .when()
             .get()
         .then()
-            .body("", Matchers.hasSize(2))
-            .body("nome", Matchers.hasItems("Americana", "Tailandesa"));
+            .body("", hasSize(2));
     }
 
     @Test
 	public void deveRetornarStatus201_QuandoCadastrarCozinha() {
-		RestAssured.given()
+		given()
 			.body("{ \"nome\": \"Chinesa\" }")
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
@@ -73,6 +75,29 @@ class CadastroCozinhaIT {
 			.post()
 		.then()
 			.statusCode(HttpStatus.CREATED.value());
+	}
+
+    @Test
+	public void deveRetornarRespostaEStatusCorretos_QuandoConsultarCozinhaExistente() {
+		given()
+			.pathParam("cozinhaId", 2)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(HttpStatus.OK.value())
+			.body("nome", equalTo("Americana"));
+	}
+	
+	@Test
+	public void deveRetornarStatus404_QuandoConsultarCozinhaInexistente() {
+		given()
+			.pathParam("cozinhaId", 100)
+			.accept(ContentType.JSON)
+		.when()
+			.get("/{cozinhaId}")
+		.then()
+			.statusCode(HttpStatus.NOT_FOUND.value());
 	}
 
     private void prepararDados() {

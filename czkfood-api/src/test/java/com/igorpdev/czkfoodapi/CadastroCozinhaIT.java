@@ -1,6 +1,9 @@
 package com.igorpdev.czkfoodapi;
 
-import org.flywaydb.core.Flyway;
+import com.igorpdev.czkfoodapi.domain.model.Cozinha;
+import com.igorpdev.czkfoodapi.domain.repository.CozinhaRepository;
+import com.igorpdev.czkfoodapi.util.DatabaseCleaner;
+
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +27,10 @@ class CadastroCozinhaIT {
     private int port;
 
     @Autowired
-    private Flyway flyway;
+    private DatabaseCleaner dbCleaner;
+
+    @Autowired
+    private CozinhaRepository cozinhaRepository;
 
     @BeforeEach
     public void setUp() {
@@ -32,7 +38,8 @@ class CadastroCozinhaIT {
         RestAssured.port = port;
         RestAssured.basePath = "/cozinhas";
 
-        flyway.migrate();
+        dbCleaner.clearTables();
+        prepararDados();
     }
     
     @Test
@@ -46,18 +53,18 @@ class CadastroCozinhaIT {
     }
 
     @Test
-    public void deveConter4Cozinhas_QuandoConsultarCozinhas() {
+    public void deveConter2Cozinhas_QuandoConsultarCozinhas() {
         RestAssured.given()
             .accept(ContentType.JSON)
         .when()
             .get()
         .then()
-            .body("", Matchers.hasSize(4))
-            .body("nome", Matchers.hasItems("Indiana", "Tailandesa"));
+            .body("", Matchers.hasSize(2))
+            .body("nome", Matchers.hasItems("Americana", "Tailandesa"));
     }
 
     @Test
-	public void testRetornarStatus201_QuandoCadastrarCozinha() {
+	public void deveRetornarStatus201_QuandoCadastrarCozinha() {
 		RestAssured.given()
 			.body("{ \"nome\": \"Chinesa\" }")
 			.contentType(ContentType.JSON)
@@ -67,5 +74,15 @@ class CadastroCozinhaIT {
 		.then()
 			.statusCode(HttpStatus.CREATED.value());
 	}
+
+    private void prepararDados() {
+        Cozinha cozinha1 = new Cozinha();
+        cozinha1.setNome("Tailandesa");
+        cozinhaRepository.save(cozinha1);
+
+        Cozinha cozinha2 = new Cozinha();
+        cozinha2.setNome("Americana");
+        cozinhaRepository.save(cozinha2);
+    }
 
 }

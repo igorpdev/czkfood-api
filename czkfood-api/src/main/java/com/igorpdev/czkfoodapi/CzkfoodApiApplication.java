@@ -1,5 +1,7 @@
 package com.igorpdev.czkfoodapi;
 
+import java.util.TimeZone;
+
 import com.igorpdev.czkfoodapi.infrastructure.repository.CustomJpaRepositoryImpl;
 
 import org.springframework.boot.SpringApplication;
@@ -11,6 +13,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class CzkfoodApiApplication {
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+		
 		SpringApplication.run(CzkfoodApiApplication.class, args);
 	}
 

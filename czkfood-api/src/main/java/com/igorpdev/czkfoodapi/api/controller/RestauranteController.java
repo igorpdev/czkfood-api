@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.igorpdev.czkfoodapi.api.assembler.RestauranteInputDisassembler;
 import com.igorpdev.czkfoodapi.api.assembler.RestauranteModelAssembler;
 import com.igorpdev.czkfoodapi.api.model.RestauranteModel;
 import com.igorpdev.czkfoodapi.api.model.input.RestauranteInput;
 import com.igorpdev.czkfoodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
-import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 import com.igorpdev.czkfoodapi.domain.repository.RestauranteRepository;
 import com.igorpdev.czkfoodapi.domain.service.CadastroRestauranteService;
@@ -39,6 +39,9 @@ public class RestauranteController {
     @Autowired
     private RestauranteModelAssembler assembler;
 
+    @Autowired
+    private RestauranteInputDisassembler disassembler;
+
     @GetMapping
     public List<RestauranteModel> listar() {
         return assembler.toCollectionModel(restauranteRepository.findAll());
@@ -55,7 +58,7 @@ public class RestauranteController {
     @ResponseStatus(HttpStatus.CREATED)
     public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
         try {
-            Restaurante restaurante = toDomainObject(restauranteInput);
+            Restaurante restaurante = disassembler.toDomainObject(restauranteInput);
             
             return assembler.toModel(cadastroRestaurante.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException e) {
@@ -66,7 +69,7 @@ public class RestauranteController {
     @PutMapping("/{restauranteId}")
     public RestauranteModel atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {		
         try {
-            Restaurante restaurante = toDomainObject(restauranteInput);
+            Restaurante restaurante = disassembler.toDomainObject(restauranteInput);
 
             Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
 
@@ -77,19 +80,6 @@ public class RestauranteController {
         } catch (CozinhaNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }        
-    }
-
-    private Restaurante toDomainObject(RestauranteInput restauranteInput) {
-        Restaurante restaurante = new Restaurante();
-        restaurante.setNome(restauranteInput.getNome());
-        restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
-
-        Cozinha cozinha = new Cozinha();
-        cozinha.setId(restauranteInput.getCozinha().getId());
-
-        restaurante.setCozinha(cozinha);
-
-        return restaurante;
     }
 
 }

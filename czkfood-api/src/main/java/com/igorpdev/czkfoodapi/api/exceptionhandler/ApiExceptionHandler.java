@@ -38,12 +38,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Autowired
     private MessageSource messageSource;
-
-    @ExceptionHandler({ ValidacaoException.class })
-    public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request) {
-        return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(), 
-                HttpStatus.BAD_REQUEST, request);
-    }
     
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

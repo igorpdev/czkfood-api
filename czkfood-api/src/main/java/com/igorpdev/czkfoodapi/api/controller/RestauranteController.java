@@ -7,8 +7,10 @@ import javax.validation.Valid;
 
 import com.igorpdev.czkfoodapi.api.model.CozinhaModel;
 import com.igorpdev.czkfoodapi.api.model.RestauranteModel;
+import com.igorpdev.czkfoodapi.api.model.input.RestauranteInput;
 import com.igorpdev.czkfoodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
+import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 import com.igorpdev.czkfoodapi.domain.repository.RestauranteRepository;
 import com.igorpdev.czkfoodapi.domain.service.CadastroRestauranteService;
@@ -49,25 +51,29 @@ public class RestauranteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RestauranteModel adicionar(@RequestBody @Valid Restaurante restaurante) {
+    public RestauranteModel adicionar(@RequestBody @Valid RestauranteInput restauranteInput) {
         try {
+            Restaurante restaurante = toDomainObject(restauranteInput);
+            
             return toModel(cadastroRestaurante.salvar(restaurante));
         } catch (CozinhaNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage(), e);
+            throw new NegocioException(e.getMessage());
         }
     }
 
     @PutMapping("/{restauranteId}")
-    public RestauranteModel atualizar(@PathVariable Long restauranteId, @RequestBody @Valid Restaurante restaurante) {
-		Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
-			
-		BeanUtils.copyProperties(restaurante, restauranteAtual, 
-                "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
-		
+    public RestauranteModel atualizar(@PathVariable Long restauranteId, @RequestBody @Valid RestauranteInput restauranteInput) {		
         try {
+            Restaurante restaurante = toDomainObject(restauranteInput);
+
+            Restaurante restauranteAtual = cadastroRestaurante.buscarOuFalhar(restauranteId);
+
+            BeanUtils.copyProperties(restaurante, restauranteAtual, 
+                "id", "formasPagamento", "endereco", "dataCadastro", "produtos");
+
             return toModel(cadastroRestaurante.salvar(restauranteAtual));
         } catch (CozinhaNaoEncontradaException e) {
-            throw new NegocioException(e.getMessage(), e);
+            throw new NegocioException(e.getMessage());
         }        
     }
 
@@ -88,6 +94,19 @@ public class RestauranteController {
         return restaurantes.stream()
             .map(restaurante -> toModel(restaurante))
             .collect(Collectors.toList());
+    }
+
+    private Restaurante toDomainObject(RestauranteInput restauranteInput) {
+        Restaurante restaurante = new Restaurante();
+        restaurante.setNome(restauranteInput.getNome());
+        restaurante.setTaxaFrete(restauranteInput.getTaxaFrete());
+
+        Cozinha cozinha = new Cozinha();
+        cozinha.setId(restauranteInput.getCozinha().getId());
+
+        restaurante.setCozinha(cozinha);
+
+        return restaurante;
     }
 
 }

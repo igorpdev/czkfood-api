@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.igorpdev.czkfoodapi.api.exceptionhandler.ValidacaoException;
+import com.igorpdev.czkfoodapi.api.model.RestauranteModel;
 import com.igorpdev.czkfoodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
@@ -54,8 +55,12 @@ public class RestauranteController {
     }
 
     @GetMapping("/{restauranteId}")
-    public Restaurante buscar(@PathVariable Long restauranteId) {
-        return cadastroRestaurante.buscarOuFalhar(restauranteId);
+    public RestauranteModel buscar(@PathVariable Long restauranteId) {
+        Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
+
+        RestauranteModel restauranteModel = null; // Conversão de entidade Restaurante para RestauranteModel
+
+        return restauranteModel;
     }
 
     @PostMapping

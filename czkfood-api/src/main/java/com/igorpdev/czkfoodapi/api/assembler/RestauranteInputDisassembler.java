@@ -1,6 +1,7 @@
 package com.igorpdev.czkfoodapi.api.assembler;
 
 import com.igorpdev.czkfoodapi.api.model.input.RestauranteInput;
+import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 
 import org.modelmapper.ModelMapper;
@@ -15,6 +16,12 @@ public class RestauranteInputDisassembler {
     
     public Restaurante toDomainObject(RestauranteInput restauranteInput) {
         return modelMapper.map(restauranteInput, Restaurante.class);
+    }
+
+    public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante) {
+        restaurante.setCozinha(new Cozinha());
+        
+        modelMapper.map(restauranteInput, restaurante);
     }
 
 }

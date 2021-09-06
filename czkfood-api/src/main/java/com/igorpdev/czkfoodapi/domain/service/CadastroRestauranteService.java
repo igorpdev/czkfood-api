@@ -2,6 +2,7 @@ package com.igorpdev.czkfoodapi.domain.service;
 
 import com.igorpdev.czkfoodapi.domain.exception.RestauranteNaoEncontradoException;
 import com.igorpdev.czkfoodapi.domain.model.Cozinha;
+import com.igorpdev.czkfoodapi.domain.model.Cidade;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 import com.igorpdev.czkfoodapi.domain.repository.RestauranteRepository;
 
@@ -17,6 +18,9 @@ public class CadastroRestauranteService {
 
     @Autowired
     CadastroCozinhaService cadastroCozinha;
+
+    @Autowired
+    CadastroCidadeService cadastroCidade;
 
     @Transactional
     public void ativar(Long restauranteId) {
@@ -35,10 +39,13 @@ public class CadastroRestauranteService {
     @Transactional
     public Restaurante salvar(Restaurante restaurante) {
         Long cozinhaId = restaurante.getCozinha().getId();
+        Long cidadeId = restaurante.getEndereco().getCidade().getId();
 
         Cozinha cozinha = cadastroCozinha.buscarOuFalhar(cozinhaId);
+        Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
         restaurante.setCozinha(cozinha);
+        restaurante.getEndereco().setCidade(cidade);
 
         return restauranteRepository.save(restaurante);
     }

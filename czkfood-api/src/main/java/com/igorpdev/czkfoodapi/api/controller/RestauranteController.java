@@ -8,6 +8,7 @@ import com.igorpdev.czkfoodapi.api.assembler.RestauranteInputDisassembler;
 import com.igorpdev.czkfoodapi.api.assembler.RestauranteModelAssembler;
 import com.igorpdev.czkfoodapi.api.model.RestauranteModel;
 import com.igorpdev.czkfoodapi.api.model.input.RestauranteInput;
+import com.igorpdev.czkfoodapi.domain.exception.CidadeNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
@@ -61,7 +62,7 @@ public class RestauranteController {
             Restaurante restaurante = disassembler.toDomainObject(restauranteInput);
             
             return assembler.toModel(cadastroRestaurante.salvar(restaurante));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }
     }
@@ -74,7 +75,7 @@ public class RestauranteController {
             disassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 
             return assembler.toModel(cadastroRestaurante.salvar(restauranteAtual));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage());
         }        
     }

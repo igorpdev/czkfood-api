@@ -1,6 +1,7 @@
 package com.igorpdev.czkfoodapi.api.assembler;
 
 import com.igorpdev.czkfoodapi.api.model.input.RestauranteInput;
+import com.igorpdev.czkfoodapi.domain.model.Cidade;
 import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 
@@ -20,6 +21,10 @@ public class RestauranteInputDisassembler {
 
     public void copyToDomainObject(RestauranteInput restauranteInput, Restaurante restaurante) {
         restaurante.setCozinha(new Cozinha());
+
+        if (restaurante.getEndereco() != null) {
+            restaurante.getEndereco().setCidade(new Cidade());
+        }
         
         modelMapper.map(restauranteInput, restaurante);
     }

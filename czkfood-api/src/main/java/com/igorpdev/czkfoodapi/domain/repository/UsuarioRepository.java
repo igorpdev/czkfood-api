@@ -1,9 +1,8 @@
-package com.igorpdev.czkfoodapi.infrastructure.repository;
+package com.igorpdev.czkfoodapi.domain.repository;
 
 import java.util.Optional;
 
 import com.igorpdev.czkfoodapi.domain.model.Usuario;
-import com.igorpdev.czkfoodapi.domain.repository.CustomJpaRepository;
 
 import org.springframework.stereotype.Repository;
 

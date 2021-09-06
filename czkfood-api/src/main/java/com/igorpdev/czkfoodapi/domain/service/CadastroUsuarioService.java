@@ -5,7 +5,7 @@ import java.util.Optional;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
 import com.igorpdev.czkfoodapi.domain.exception.UsuarioNaoEncontradoException;
 import com.igorpdev.czkfoodapi.domain.model.Usuario;
-import com.igorpdev.czkfoodapi.infrastructure.repository.UsuarioRepository;
+import com.igorpdev.czkfoodapi.domain.repository.UsuarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

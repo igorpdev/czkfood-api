@@ -11,8 +11,8 @@ import com.igorpdev.czkfoodapi.api.model.input.SenhaInput;
 import com.igorpdev.czkfoodapi.api.model.input.UsuarioComSenhaInput;
 import com.igorpdev.czkfoodapi.api.model.input.UsuarioInput;
 import com.igorpdev.czkfoodapi.domain.model.Usuario;
+import com.igorpdev.czkfoodapi.domain.repository.UsuarioRepository;
 import com.igorpdev.czkfoodapi.domain.service.CadastroUsuarioService;
-import com.igorpdev.czkfoodapi.infrastructure.repository.UsuarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

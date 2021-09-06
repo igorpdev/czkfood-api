@@ -1,5 +1,7 @@
 package com.igorpdev.czkfoodapi.domain.service;
 
+import java.util.Optional;
+
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
 import com.igorpdev.czkfoodapi.domain.exception.UsuarioNaoEncontradoException;
 import com.igorpdev.czkfoodapi.domain.model.Usuario;
@@ -17,6 +19,15 @@ public class CadastroUsuarioService {
     
     @Transactional
     public Usuario salvar(Usuario usuario) {
+        usuarioRepository.detach(usuario);
+
+        Optional<Usuario> usuarioExistente = usuarioRepository.findByEmail(usuario.getEmail());
+
+        if (usuarioExistente.isPresent() && !usuarioExistente.get().equals(usuario)) {
+            throw new NegocioException(
+                String.format("Já existe um usuário cadastrado com o e-mail %s", usuario.getEmail()));
+        }
+
         return usuarioRepository.save(usuario);
     }
     

@@ -5,6 +5,7 @@ import com.igorpdev.czkfoodapi.domain.model.Cozinha;
 import com.igorpdev.czkfoodapi.domain.model.FormaPagamento;
 import com.igorpdev.czkfoodapi.domain.model.Cidade;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
+import com.igorpdev.czkfoodapi.domain.model.Usuario;
 import com.igorpdev.czkfoodapi.domain.repository.RestauranteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +17,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class CadastroRestauranteService {
     
     @Autowired
-    RestauranteRepository restauranteRepository;
+    private RestauranteRepository restauranteRepository;
 
     @Autowired
-    CadastroCozinhaService cadastroCozinha;
+    private CadastroCozinhaService cadastroCozinha;
 
     @Autowired
-    CadastroCidadeService cadastroCidade;
+    private CadastroCidadeService cadastroCidade;
 
     @Autowired
-    CadastroFormaPagamentoService cadastroFormaPagamento;
+    private CadastroFormaPagamentoService cadastroFormaPagamento;
+
+    @Autowired
+    private CadastroUsuarioService cadastroUsuario;
 
     @Transactional
     public void ativar(Long restauranteId) {
@@ -83,6 +87,22 @@ public class CadastroRestauranteService {
         FormaPagamento formaPagamento = cadastroFormaPagamento.buscarOuFalhar(formaPagamentoId);
 
         restaurante.associarFormaPagamento(formaPagamento);
+    }
+
+    @Transactional
+    public void associarResponsavel(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+        restaurante.adicionarResponsavel(usuario);
+    }
+
+    @Transactional
+    public void desassociarResponsavel(@PathVariable Long restauranteId, @PathVariable Long usuarioId) {
+        Restaurante restaurante = buscarOuFalhar(restauranteId);
+        Usuario usuario = cadastroUsuario.buscarOuFalhar(usuarioId);
+
+        restaurante.removerResponsavel(usuario);
     }
 
     public Restaurante buscarOuFalhar(Long restauranteId) {

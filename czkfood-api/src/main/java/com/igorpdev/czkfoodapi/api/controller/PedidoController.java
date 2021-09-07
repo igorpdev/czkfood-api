@@ -3,7 +3,9 @@ package com.igorpdev.czkfoodapi.api.controller;
 import java.util.List;
 
 import com.igorpdev.czkfoodapi.api.assembler.PedidoModelAssembler;
+import com.igorpdev.czkfoodapi.api.assembler.PedidoResumoModelAssembler;
 import com.igorpdev.czkfoodapi.api.model.PedidoModel;
+import com.igorpdev.czkfoodapi.api.model.PedidoResumoModel;
 import com.igorpdev.czkfoodapi.domain.model.Pedido;
 import com.igorpdev.czkfoodapi.domain.repository.PedidoRepository;
 import com.igorpdev.czkfoodapi.domain.service.EmissaoPedidoService;
@@ -26,12 +28,15 @@ public class PedidoController {
     
     @Autowired
     private PedidoModelAssembler pedidoModelAssembler;
+
+    @Autowired
+    private PedidoResumoModelAssembler pedidoResumoModelAssembler;
     
     @GetMapping
-    public List<PedidoModel> listar() {
+    public List<PedidoResumoModel> listar() {
         List<Pedido> todosPedidos = pedidoRepository.findAll();
         
-        return pedidoModelAssembler.toCollectionModel(todosPedidos);
+        return pedidoResumoModelAssembler.toCollectionModel(todosPedidos);
     }
     
     @GetMapping("/{pedidoId}")

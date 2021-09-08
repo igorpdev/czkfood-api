@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.igorpdev.czkfoodapi.api.assembler.RestauranteInputDisassembler;
 import com.igorpdev.czkfoodapi.api.assembler.RestauranteModelAssembler;
 import com.igorpdev.czkfoodapi.api.model.RestauranteModel;
 import com.igorpdev.czkfoodapi.api.model.input.RestauranteInput;
+import com.igorpdev.czkfoodapi.api.model.view.RestauranteView;
 import com.igorpdev.czkfoodapi.domain.exception.CidadeNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
@@ -44,10 +46,38 @@ public class RestauranteController {
     @Autowired
     private RestauranteInputDisassembler disassembler;
 
-    @GetMapping
-    public List<RestauranteModel> listar() {
-        return assembler.toCollectionModel(restauranteRepository.findAll());
-    }
+    @JsonView(RestauranteView.Resumo.class)
+	@GetMapping
+	public List<RestauranteModel> listar() {
+		return assembler.toCollectionModel(restauranteRepository.findAll());
+	}
+	
+	@JsonView(RestauranteView.ApenasNome.class)
+	@GetMapping(params = "projecao=apenas-nome")
+	public List<RestauranteModel> listarApenasNomes() {
+		return listar();
+	}
+
+            /* Requisição única com Views dinâmicas - Pode ser um substituto para o DTO,
+                porém, serve apenas para mostrar o que já existe na entidade, sendo
+                            impossível declarar novos atributos */
+    /* @GetMapping
+	public MappingJacksonValue listar(@RequestParam(required = false) String projecao) {
+		List<Restaurante> restaurantes = restauranteRepository.findAll();
+		List<RestauranteModel> restaurantesModel = assembler.toCollectionModel(restaurantes);
+		
+		MappingJacksonValue restaurantesWrapper = new MappingJacksonValue(restaurantesModel);
+		
+		restaurantesWrapper.setSerializationView(RestauranteView.Resumo.class);
+		
+		if ("apenas-nome".equals(projecao)) {
+			restaurantesWrapper.setSerializationView(RestauranteView.ApenasNome.class);
+		} else if ("completo".equals(projecao)) {
+			restaurantesWrapper.setSerializationView(null);
+		}
+		
+		return restaurantesWrapper;
+	} */
 
     @GetMapping("/{restauranteId}")
     public RestauranteModel buscar(@PathVariable Long restauranteId) {

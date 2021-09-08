@@ -5,11 +5,12 @@ import java.util.Optional;
 
 import com.igorpdev.czkfoodapi.domain.model.Pedido;
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PedidoRepository extends CustomJpaRepository<Pedido, Long> {
+public interface PedidoRepository extends CustomJpaRepository<Pedido, Long>, JpaSpecificationExecutor<Pedido> {
 
     Optional<Pedido> findByCodigo(String codigo);
 

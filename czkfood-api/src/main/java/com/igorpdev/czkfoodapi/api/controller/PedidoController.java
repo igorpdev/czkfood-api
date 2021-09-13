@@ -1,6 +1,7 @@
 package com.igorpdev.czkfoodapi.api.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -10,6 +11,7 @@ import com.igorpdev.czkfoodapi.api.assembler.PedidoResumoModelAssembler;
 import com.igorpdev.czkfoodapi.api.model.PedidoModel;
 import com.igorpdev.czkfoodapi.api.model.PedidoResumoModel;
 import com.igorpdev.czkfoodapi.api.model.input.PedidoInput;
+import com.igorpdev.czkfoodapi.core.data.PageableTranslator;
 import com.igorpdev.czkfoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
 import com.igorpdev.czkfoodapi.domain.model.Pedido;
@@ -54,6 +56,8 @@ public class PedidoController {
 
     @GetMapping
     public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, @PageableDefault(size = 10) Pageable pageable) {
+        pageable = traduzirPageable(pageable);
+        
         Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
         
         List<PedidoResumoModel> pedidosResumoModel = pedidoResumoModelAssembler.toCollectionModel(pedidosPage.getContent());
@@ -85,6 +89,22 @@ public class PedidoController {
         } catch (EntidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
+    }
+
+    private Pageable traduzirPageable(Pageable apiPageable) {
+		var mapeamento = Map.of(
+				"codigo", "codigo",
+				"subtotal", "subtotal",
+				"taxaFrete", "taxaFrete",
+				"valorTotal", "valorTotal",
+				"dataCriacao", "dataCriacao",
+				"restaurante.nome", "restaurante.nome",
+				"restaurante.id", "restaurante.id",
+				"cliente.id", "cliente.id",
+				"cliente.nome", "cliente.nome"
+			);
+
+        return PageableTranslator.translate(apiPageable, mapeamento);
     }
 
 }

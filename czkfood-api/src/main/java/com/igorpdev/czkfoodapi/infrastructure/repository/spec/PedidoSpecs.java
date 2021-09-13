@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import javax.persistence.criteria.Predicate;
 
+import com.igorpdev.czkfoodapi.domain.filter.PedidoFilter;
 import com.igorpdev.czkfoodapi.domain.model.Pedido;
-import com.igorpdev.czkfoodapi.domain.repository.filter.PedidoFilter;
 
 import org.springframework.data.jpa.domain.Specification;
 

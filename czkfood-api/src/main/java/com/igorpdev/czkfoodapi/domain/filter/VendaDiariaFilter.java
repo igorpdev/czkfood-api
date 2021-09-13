@@ -1,4 +1,4 @@
-package com.igorpdev.czkfoodapi.domain.repository.filter;
+package com.igorpdev.czkfoodapi.domain.filter;
 
 import java.time.OffsetDateTime;
 
@@ -10,9 +10,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PedidoFilter {
+public class VendaDiariaFilter {
     
-    private Long clienteId;
     private Long restauranteId;
 
     @DateTimeFormat(iso = ISO.DATE_TIME)

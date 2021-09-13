@@ -14,10 +14,10 @@ import com.igorpdev.czkfoodapi.api.model.input.PedidoInput;
 import com.igorpdev.czkfoodapi.core.data.PageableTranslator;
 import com.igorpdev.czkfoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.igorpdev.czkfoodapi.domain.exception.NegocioException;
+import com.igorpdev.czkfoodapi.domain.filter.PedidoFilter;
 import com.igorpdev.czkfoodapi.domain.model.Pedido;
 import com.igorpdev.czkfoodapi.domain.model.Usuario;
 import com.igorpdev.czkfoodapi.domain.repository.PedidoRepository;
-import com.igorpdev.czkfoodapi.domain.repository.filter.PedidoFilter;
 import com.igorpdev.czkfoodapi.domain.service.EmissaoPedidoService;
 import com.igorpdev.czkfoodapi.infrastructure.repository.spec.PedidoSpecs;
 

@@ -3,6 +3,7 @@ package com.igorpdev.czkfoodapi.domain.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.igorpdev.czkfoodapi.domain.model.FotoProduto;
 import com.igorpdev.czkfoodapi.domain.model.Produto;
 import com.igorpdev.czkfoodapi.domain.model.Restaurante;
 
@@ -22,5 +23,9 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>, Produto
 
     @Query("FROM Produto p WHERE p.ativo = true AND p.restaurante = :restaurante")
     List<Produto> findAtivosByRestaurante(Restaurante restaurante);
+
+    @Query("SELECT f FROM FotoProduto f JOIN f.produto p "
+            + "WHERE p.restaurante.id = :restauranteId AND f.produto.id = :produtoId")
+    Optional<FotoProduto> findFotoById(Long restauranteId, Long produtoId);
     
 }
